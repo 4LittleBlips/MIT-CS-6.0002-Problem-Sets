@@ -59,19 +59,21 @@ def greedy_cow_transport(cows,limit=10):
     """
     # TODO: Your code here
     cows_info = sorted(cows.items(), key = lambda cow: cow[1], reverse = True)
+    sorted_cows = []
     all_trips = []
 
-    while len(cows_info) != 0:
+    while len(list(cows.keys())) != len(sorted_cows):
         trip = []
         total_weight = 0
 
         for index, cow in enumerate(cows_info):
-            if cow[1] + total_weight <= limit:
+            if cow[1] + total_weight <= limit and cow[0] not in sorted_cows:
                 trip.append(cow[0])
                 total_weight += cow[1]
-                del cows_info[index]
+                sorted_cows.append(cow[0])
 
         all_trips.append(trip)
+
 
     return all_trips
 
@@ -104,20 +106,15 @@ def brute_force_cow_transport(cows,limit=10):
     total_weight = 0
     total_partitions = []
     cows_names = list(cows.keys())
+    possible_all_trips = []
 
     for partition in get_partitions(cows_names):
-        total_partitions.append(partition)
-
-    total_partitions = sorted(total_partitions, key = lambda x: len(x))
-
-    for i in range(len(total_partitions)):
-        all_trips = total_partitions[i]
         counter = 0
-        for trip in all_trips:
-            if sum(cows[name] for name in trip) < limit:
+        for trip in sorted(partition, key=len):
+            if sum(cows[name] for name in trip) <= limit:
                 counter += 1
-            if counter == len(all_trips):
-                return all_trips
+            if counter == len(partition):
+                return partition
 
 
 

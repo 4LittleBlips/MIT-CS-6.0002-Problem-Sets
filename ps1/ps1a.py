@@ -103,18 +103,28 @@ def brute_force_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    total_weight = 0
-    total_partitions = []
-    cows_names = list(cows.keys())
-    possible_all_trips = []
+    best_partition = []
+    cows = cows.copy()
 
-    for partition in get_partitions(cows_names):
+
+    for partition in get_partitions(cows):
         counter = 0
+
         for trip in sorted(partition, key=len):
+
             if sum(cows[name] for name in trip) <= limit:
                 counter += 1
-            if counter == len(partition):
-                return partition
+                if counter == len(partition):
+                    if best_partition == []:
+                        best_partition = partition
+                    else:
+                        if len(best_partition) > len(partition):
+                            best_partiton = partition
+
+    return best_partition
+
+
+    
 
 
 
@@ -136,12 +146,12 @@ def compare_cow_transport_algorithms():
     start1 = time.time()
     greedy = greedy_cow_transport(cows)
     end1 = time.time()
-    print('The greed algorithm took {0} seconds and found {1}'.format(end1-start1, greedy))
+    print('The greedy algorithm took {0} seconds *10^(-10) and found {1}'.format((end1-start1)*10**5, greedy))
 
     start2 = time.time()
     brute = brute_force_cow_transport(cows)
     end2 = time.time()
-    print('The Brute Force algorithm took {0} seconds and found {1}'.format(end2-start2, brute))
+    print('The Brute Force algorithm took {0} seconds *10^(-10) and found {1}'.format((end2-start2)*10**5, brute))
 
 
 cows = load_cows('ps1_cow_data.txt')

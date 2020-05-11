@@ -22,8 +22,29 @@ def dp_make_weight(egg_weights, target_weight, memo = {}):
     
     Returns: int, smallest number of eggs needed to make target weight
     """
-    # TODO: Your code here
-    pass
+    egg_weights = tuple(sorted(egg_weights, reverse=True))    
+    
+    total_eggs = 0
+    available_weight = target_weight
+    
+    if egg_weights in memo:
+        return memo[egg_weights]
+
+    elif len(egg_weights) == 1:
+        return egg_weights[0] * target_weight
+
+    else:
+        num_eggs = available_weight // egg_weights[0]
+        remaining_weight = available_weight - (num_eggs * egg_weights[0])
+        available_weight = remaining_weight
+        memo[egg_weights[0]] = num_eggs
+        total_eggs = total_eggs + memo[egg_weights[0]] + dp_make_weight(egg_weights[1:], remaining_weight, memo)
+    
+    return total_eggs  
+
+
+
+
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like
 if __name__ == '__main__':

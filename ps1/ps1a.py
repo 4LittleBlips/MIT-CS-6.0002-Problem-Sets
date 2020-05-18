@@ -156,3 +156,5 @@ def compare_cow_transport_algorithms():
 
 cows = load_cows('ps1_cow_data.txt')
 cows_from_pdf = {"Jesse":6, "Maybel": 3, "Callie": 2, "Maggie": 5}
+
+compare_cow_transport_algorithms()

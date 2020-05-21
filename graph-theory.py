@@ -82,6 +82,15 @@ def getAncestry(node, parents):
         ancestry = getAncestry(parents[node], parents)
         return ancestry + [node] 
 
+
+class Graph(Digraph):
+    def makeEdge(self, edge):
+        Digraph.makeEdge(self, edge)
+        reverse = Edge(edge.getDest(), edge.getSrc())
+        Digraph.makeEdge(self, reverse)
+        return self.edges
+
+
 #Nodes
 
 s = Node('S')
@@ -105,14 +114,14 @@ edges = [e1, e2, e3, e4, e5, e6]
 
 #Graph
 
-g = Digraph()
+g = Graph()
 
 for node in nodes:
     g.addNode(node)
 
 for edge in edges:
     g.makeEdge(edge)
-
+print(g)
 
 def BFS_1(graph, start, end):
     levels = {start: 0}
@@ -175,21 +184,33 @@ printPath(BFS_2(g, s, c))
 
 
 def DFS(graph, start, end, path=[], shortest=None):
-    path += [start]
+    path = path + [start]
     
     if start == end:
         return path
-
+    
+    print("Current Path: ", end="")
+    printPath(path)
+    
     for child in graph.getNeighbors(start):
+        
         if child not in path:
+            
             if shortest == None or len(path) < len(shortest):
                 newPath = DFS(graph, child, end, path, shortest)        
+                
                 if newPath != None:
                     shortest = newPath
+                elif newPath == None and shortest != None:
+                    shortest = shortest[:-1]    # Removes last node in path if that node leads to an impass
+    
     return shortest
 
 print("Depth-First Search (S -> D): \n")
 printPath(DFS(g, s, d))
+
+print("Depth-First Search (Z -> B): \n")
+printPath(DFS(g, z, b))
 
 
 
